@@ -1,0 +1,61 @@
+version: '3'
+
+services:
+  app-backend:
+    # Configuration for building the docker image for the backend service
+    build:
+      context: express-backend # Use an image built from the specified dockerfile in the `polling-app-server` directory.
+      dockerfile: Dockerfile
+    ports:
+      - "4001:4001" # Forward the exposed port 8080 on the container to port 8080 on the host machine
+    restart: always
+    depends_on:
+      - db # This service depends on mysql. Start that first.
+    environment:
+      PSQL_HOST: db
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-rmit}
+      POSTGRES_USER: ${POSTGRES_USER:-postgres}
+      POSTGRES_DB: ${POSTGRES_DB:-postgres}
+    # networks:
+    #   - backend
+    #   - frontend
+    # environment: # Pass environment variables to the service
+    #   SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/postgres
+    #   # SPRING_DATASOURCE_URL: jdbc:postgresql://host.docker.internal:5432/postgres
+    #   SPRING_DATASOURCE_USERNAME: postgres
+    #   SPRING_DATASOURCE_PASSWORD: rmit
+
+  app-frontend:
+    # Configuration for building the docker image for the backend service
+    build:
+      context: frontend/my-app # Use an image built from the specified dockerfile in the `polling-app-server` directory.
+      dockerfile: Dockerfile
+    ports:
+      - "80:80" # Forward the exposed port 8080 on the container to port 8080 on the host machine
+    restart: always
+    depends_on:
+      - db # This service depends on mysql. Start that first.
+      - app-backend # This service depends on mysql. Start that first.
+    # networks: # Networks to join (Services on the same network can communicate with each other using their name)
+    #   - frontend
+  
+  db:
+    image: "postgres"
+    ports:
+      - "5433:5432"
+    environment:
+      POSTGRES_DB: postgres
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: rmit
+    volumes:
+      - db-data:/var/lib/postgresql/data
+    # networks: # Networks to join (Services on the same network can communicate with each other using their name)
+    #   - backend
+
+volumes:
+  db-data:
+  # operational-db-data:
+
+# networks:
+#   backend:
+#   frontend:
