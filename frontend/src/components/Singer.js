@@ -11,7 +11,7 @@ function Singer() {
     // const [totalPage, setTotalPage] = useState(0)
     const postRef = useRef(null)
     const [editingID, setEditingID] = useState(null)
-    const endpoint = process.env.REACT_APP_BACKEND + '/singers'
+    const endpoint = (process.env.HOST || "http://localhost:4001") + '/singers'
 
     const fetchData = async() => {
         // await fetchPagination()

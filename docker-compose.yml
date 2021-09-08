@@ -36,6 +36,8 @@ services:
     depends_on:
       - db # This service depends on mysql. Start that first.
       - app-backend # This service depends on mysql. Start that first.
+    environment:
+      HOST: app-backend
     # networks: # Networks to join (Services on the same network can communicate with each other using their name)
     #   - frontend
   
