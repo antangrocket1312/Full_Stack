@@ -36,10 +36,10 @@ services:
     depends_on:
       - app-backend # This service depends on mysql. Start that first.
       - db # This service depends on mysql. Start that first.
-    environment:
-      BACKEND_URL: app-backend
-    # links:
-    #   - api
+    # environment:
+    #   BACKEND_URL: app-backend
+    links:
+      - app-backend
     # environment:
     #   HOST: app-backend
     # networks: # Networks to join (Services on the same network can communicate with each other using their name)

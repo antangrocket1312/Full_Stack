@@ -6,9 +6,9 @@ import axios from 'axios';
 
 function Singer() {
 
-    const api = axios.create({
-        baseURL: 'http://localhost:4041',
-    })
+    // const api = axios.create({
+    //     baseURL: 'http://localhost:4041',
+    // })
 
     const [field, setField] = useState({name : "", nickname : "", dob : "", address : "", songs: []})
     const [data, setData] = useState([])
@@ -16,15 +16,18 @@ function Singer() {
     // const [totalPage, setTotalPage] = useState(0)
     const postRef = useRef(null)
     const [editingID, setEditingID] = useState(null)
-    const endpoint = "app-backend" + '/singers'
+    const endpoint = "http://" + window.location.hostname + ":4001" + '/singers'
+    // const endpoint = process.env.REACT_APP_BACKEND_ENDPOINT + '/singers'
     // (process.env.HOST || "http://localhost:4001") +
 
     const fetchData = async() => {
+        console.log(endpoint)
         // await fetchPagination()
-        var url = endpoint 
+        var url = endpoint
         // url += `page=${page}`
         
-        const response = await api.get("singers")
+        // const response = await api.get("singers")
+        const response = await fetch(url)
         if (response.ok) {
             response.json().then(res => {
                 setData(res)
@@ -94,7 +97,8 @@ function Singer() {
         //     resetField()
         // }
 
-        const response = await api.delete("singers" + `/delete/${el.id}`)
+        // const response = await api.delete("singers" + `/delete/${el.id}`)
+        const response = await fetch(endpoint + `/delete/${el.id}`, requestOption)
         if (response.ok) {
             setData(data.filter((e) => (e.id != el.id)))
             // fetchData()
@@ -123,7 +127,8 @@ function Singer() {
             body:JSON.stringify(field)
         };
 
-        const response = await api.post("singers", JSON.stringify(field))
+        // const response = await api.post("singers", JSON.stringify(field))
+        const response = await fetch(endpoint, requestOption)
         if (response.ok) {
             response.json().then(res => {
                 setData([...data, res])
@@ -142,7 +147,8 @@ function Singer() {
             body:JSON.stringify({...field, 'id' : editingID})
         }; 
 
-        const response = await api.put("singers")
+        // const response = await api.put("singers")
+        const response = await fetch(endpoint, requestOption)
         if (response.ok) {
             response.json().then(res => {
                 if (response.ok) {
