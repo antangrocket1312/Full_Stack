@@ -2,6 +2,7 @@ import React, {useState, useEffect, useRef} from 'react'
 import { Container, Table  } from 'reactstrap';
 import { Col, Row, Button, Form, FormGroup, Label, Input } from 'reactstrap';
 import { ListGroup, ListGroupItem } from 'reactstrap';
+import axios from 'axios';
 
 function Singer() {
 
@@ -11,7 +12,7 @@ function Singer() {
     // const [totalPage, setTotalPage] = useState(0)
     const postRef = useRef(null)
     const [editingID, setEditingID] = useState(null)
-    const endpoint = "/app-backend" + '/singers'
+    const endpoint = process.env.BACKEND_URL + '/singers'
     // (process.env.HOST || "http://localhost:4001") +
 
     const fetchData = async() => {
@@ -19,7 +20,7 @@ function Singer() {
         var url = endpoint 
         // url += `page=${page}`
         
-        const response = await fetch(url)
+        const response = await axios.get(url)
         if (response.ok) {
             response.json().then(res => {
                 setData(res)
@@ -89,7 +90,7 @@ function Singer() {
         //     resetField()
         // }
 
-        const response = await fetch(endpoint + `/delete/${el.id}`, requestOption)
+        const response = await axios.delete(endpoint + `/delete/${el.id}`)
         if (response.ok) {
             setData(data.filter((e) => (e.id != el.id)))
             // fetchData()
@@ -112,13 +113,13 @@ function Singer() {
         e.preventDefault()
         e.stopPropagation()
 
-        const requestOption = {
-            method:'POST',
-            headers:{'Content-Type':'application/json'},
-            body:JSON.stringify(field)
-        };
+        // const requestOption = {
+        //     method:'POST',
+        //     headers:{'Content-Type':'application/json'},
+        //     body:JSON.stringify(field)
+        // };
 
-        const response = await fetch(endpoint, requestOption)
+        const response = await axios.post(endpoint, JSON.stringify(field))
         if (response.ok) {
             response.json().then(res => {
                 setData([...data, res])
@@ -131,13 +132,13 @@ function Singer() {
         e.preventDefault()
         e.stopPropagation()
         
-        const requestOption = {
-            method:'PUT',
-            headers:{'Content-Type':'application/json'},
-            body:JSON.stringify({...field, 'id' : editingID})
-        }; 
+        // const requestOption = {
+        //     method:'PUT',
+        //     headers:{'Content-Type':'application/json'},
+        //     body:JSON.stringify({...field, 'id' : editingID})
+        // }; 
 
-        const response = await fetch(endpoint, requestOption)
+        const response = await axios.put(endpoint, JSON.stringify({...field, 'id' : editingID}))
         if (response.ok) {
             response.json().then(res => {
                 if (response.ok) {
