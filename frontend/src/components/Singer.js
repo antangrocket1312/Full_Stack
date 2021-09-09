@@ -12,7 +12,7 @@ function Singer() {
     // const [totalPage, setTotalPage] = useState(0)
     const postRef = useRef(null)
     const [editingID, setEditingID] = useState(null)
-    const endpoint = "app-backend:4041" + '/singers'
+    const endpoint = "app-backend" + '/singers'
     // (process.env.HOST || "http://localhost:4001") +
 
     const fetchData = async() => {
@@ -20,7 +20,7 @@ function Singer() {
         var url = endpoint 
         // url += `page=${page}`
         
-        const response = await axios.get(url)
+        const response = await fetch(url)
         if (response.ok) {
             response.json().then(res => {
                 setData(res)
@@ -90,7 +90,7 @@ function Singer() {
         //     resetField()
         // }
 
-        const response = await axios.delete(endpoint + `/delete/${el.id}`)
+        const response = await fetch(endpoint + `/delete/${el.id}`, requestOption)
         if (response.ok) {
             setData(data.filter((e) => (e.id != el.id)))
             // fetchData()
@@ -113,13 +113,13 @@ function Singer() {
         e.preventDefault()
         e.stopPropagation()
 
-        // const requestOption = {
-        //     method:'POST',
-        //     headers:{'Content-Type':'application/json'},
-        //     body:JSON.stringify(field)
-        // };
+        const requestOption = {
+            method:'POST',
+            headers:{'Content-Type':'application/json'},
+            body:JSON.stringify(field)
+        };
 
-        const response = await axios.post(endpoint, JSON.stringify(field))
+        const response = await fetch(endpoint, requestOption)
         if (response.ok) {
             response.json().then(res => {
                 setData([...data, res])
@@ -132,13 +132,13 @@ function Singer() {
         e.preventDefault()
         e.stopPropagation()
         
-        // const requestOption = {
-        //     method:'PUT',
-        //     headers:{'Content-Type':'application/json'},
-        //     body:JSON.stringify({...field, 'id' : editingID})
-        // }; 
+        const requestOption = {
+            method:'PUT',
+            headers:{'Content-Type':'application/json'},
+            body:JSON.stringify({...field, 'id' : editingID})
+        }; 
 
-        const response = await axios.put(endpoint, JSON.stringify({...field, 'id' : editingID}))
+        const response = await fetch(endpoint, requestOption)
         if (response.ok) {
             response.json().then(res => {
                 if (response.ok) {
