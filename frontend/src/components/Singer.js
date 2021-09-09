@@ -6,6 +6,10 @@ import axios from 'axios';
 
 function Singer() {
 
+    const api = axios.create({
+        baseURL: 'http://localhost:4041',
+    })
+
     const [field, setField] = useState({name : "", nickname : "", dob : "", address : "", songs: []})
     const [data, setData] = useState([])
     // const [page, setPage] = useState(1)
@@ -20,7 +24,7 @@ function Singer() {
         var url = endpoint 
         // url += `page=${page}`
         
-        const response = await fetch(url)
+        const response = await api.get("singers")
         if (response.ok) {
             response.json().then(res => {
                 setData(res)
@@ -90,7 +94,7 @@ function Singer() {
         //     resetField()
         // }
 
-        const response = await fetch(endpoint + `/delete/${el.id}`, requestOption)
+        const response = await api.delete("singers" + `/delete/${el.id}`)
         if (response.ok) {
             setData(data.filter((e) => (e.id != el.id)))
             // fetchData()
@@ -119,7 +123,7 @@ function Singer() {
             body:JSON.stringify(field)
         };
 
-        const response = await fetch(endpoint, requestOption)
+        const response = await api.post("singers", JSON.stringify(field))
         if (response.ok) {
             response.json().then(res => {
                 setData([...data, res])
@@ -138,7 +142,7 @@ function Singer() {
             body:JSON.stringify({...field, 'id' : editingID})
         }; 
 
-        const response = await fetch(endpoint, requestOption)
+        const response = await api.put("singers")
         if (response.ok) {
             response.json().then(res => {
                 if (response.ok) {
