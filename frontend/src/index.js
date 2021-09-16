@@ -6,10 +6,12 @@ import reportWebVitals from './reportWebVitals';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import "@fortawesome/fontawesome-free/css/all.min.css";
 import Singer from './components/Singer';
+import ContactForm from './components/ContactForm';
 
 ReactDOM.render(
   <React.StrictMode>
     <Singer />
+    <ContactForm></ContactForm>
   </React.StrictMode>,
   document.getElementById('root')
 );
